@@ -1,0 +1,14 @@
+[
+  {
+    "Id": 1,
+    "name": "Human Resources"
+  },
+  {
+    "Id": 2,
+    "name": "Information Technology"
+  },
+  {
+    "Id": 3,
+    "name": "Financial office"
+  }
+]

@@ -1,0 +1,46 @@
+[
+  {
+    "name": "bag1",
+    "size": 10,
+    "contents": {
+      "pocket1": {
+        "brand": "brand_a",
+        "interior": ["bottle", "keys", "sandwich"]
+      },
+      "pocket2": {
+        "brand2": "brand_b",
+        "interior": ["passport"]
+      },
+      "main": {}
+    }
+  },
+  {
+    "name": "bag2",
+    "size": 20,
+    "interior": [],
+    "contents": {
+      "pocket1": {
+        "brand": "brand_c",
+        "interior": []
+      },
+      "pocket2": {
+        "brand2": "brand_d",
+        "interior": ["sandwich"]
+      },
+      "main": {}
+    }
+  },
+  {
+    "name": "bag3",
+    "size": 30,
+
+    "contents": {
+      "pocket1": {
+        "interior": ["wallet", "money", "passport"],
+        "brand": "brand_b"
+      },
+      "pocket2": {},
+      "main": {}
+    }
+  }
+]

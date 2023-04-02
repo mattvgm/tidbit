@@ -1,0 +1,14 @@
+[
+  {
+    "name": "mary",
+    "departmentID": 2
+  },
+  {
+    "name": "william",
+    "departmentID": 1
+  },
+  {
+    "name": "ana doe",
+    "departmentID": 2
+  }
+]
