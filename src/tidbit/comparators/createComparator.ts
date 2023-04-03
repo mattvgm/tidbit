@@ -6,7 +6,7 @@
  * @param {Function} cb - The callback function to be curried.
  * @returns {Function} A curried function that takes any number of arguments.
  */
-export function CreateComparator(cb: any): Function {
+export function createComparator(cb: any): Function {
   /**
    * The curried function returned by CreateCurriedFunction.
    *

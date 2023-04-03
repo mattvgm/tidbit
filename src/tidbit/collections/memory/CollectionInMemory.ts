@@ -1,6 +1,6 @@
 import { processWhere } from "../../find/processWhere";
-import { concatJsonArray } from "../../Utils";
-import { Collection, CollectionMetadata, RelationOptions } from "../collection";
+import { concatJsonArray } from "../../utils";
+import { Collection, CollectionMetadata } from "../collection";
 import path from "path";
 import { CollectionFactory } from "../utils/CollectionFactory";
 import { queryRelations } from "../../find/queryRelations";
