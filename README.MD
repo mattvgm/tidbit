@@ -3,7 +3,7 @@ A pseudo NoSQL-db-like query package to easily query text files and treat their 
 
 ## 🌄 Motivation
 
-One day I caught up myself with a a bunch of separated JSON files and I needed a quick way to filter information within it, use a full NoSQL database for just that would be an overkill and all the embedded solutions I tried worked great with single files. I thought that would be good to create something to act like a 'pseudo-database' to query information within multiple files and still be reusable and customizable.
+One day I caught up myself with a a bunch of separated JSON files and I needed a quick way to filter information within them, use a full NoSQL database for just that would be an overkill and all the embedded solutions I tried worked great with single files only. I thought that would be good to create something to act like a 'pseudo-database' to query information within multiple files and still be reusable and customizable.
 
 The name `tidbit` is actually related to its functionality of getting a small piece of information inside a big chunk of files.
 
