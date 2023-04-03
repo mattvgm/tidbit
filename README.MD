@@ -1,14 +1,13 @@
 # Tidbit
-A pseudo query package to easily query text files and treat their data
-
+A pseudo NoSQL-db-like query package to easily query text files and treat their data
 
 ## 🌄 Motivation
 
-One day I caught up myself with a a bunch of separated JSON files and I needed a quick way to filter information within it, I didn't want to use a full NoSQL database for just that . All the embedded solutions worked great but most of the time, for being able to work with multiple different files, it would require an extra effort or pre-process the data before. I thought that would be good to create something to act like a 'pseudo-database' to query information within multiple files and still be reusable and customizable. The name `tidbit` is actually related to its functionality of getting a small piece of information inside a big chunk of files.
+One day I caught up myself with a a bunch of separated JSON files and I needed a quick way to filter information within it, use a full NoSQL database for just that would be an overkill and all the embedded solutions I tried worked great with single files. I thought that would be good to create something to act like a 'pseudo-database' to query information within multiple files and still be reusable and customizable.
+
+The name `tidbit` is actually related to its functionality of getting a small piece of information inside a big chunk of files.
 
 ## 💾 Instalation
-
-To install it should not be hard and it supports Javascript and Typescript
 
 ```bash
 npm install tidbit-js
@@ -16,12 +15,93 @@ npm install tidbit-js
    
 ## 🪄 Quickstart
 
-A better documentation is in progress in the Wiki. But this quickstart should be a good starting point. In general we have too ways of parsing files `memory` or `streams` . The API is the same for both. However `streams` have an extra output method called `toWritableStream()` that is not available to memory
+A better documentation is in progress in the Wiki. But this quickstart should be a good starting point. In general we have too ways of parsing files `memory` or `streams` . 
+
+The API is the same for both. However `streams` have an extra output method called `toWritableStream()` that is not available to memory
 
 
 ### Memory
 
 In memory is generally faster than streams, but it also uses more memory too. For multiple big files, NodeJS might crash.
+
+**Example Files**
+```json
+//users1.json
+
+[
+  {
+    "name": "john doe",
+    "departmentID": 1
+  },
+  {
+    "name": "billy doe",
+    "departmentID": 3
+  },
+  {
+    "name": "ana doe",
+    "departmentID": 2
+  }
+]
+
+//departments.json
+[
+  {
+    "Id": 1,
+    "name": "Human Resources"
+  },
+  {
+    "Id": 2,
+    "name": "Information Technology"
+  },
+  {
+    "Id": 3,
+    "name": "Financial office"
+  }
+]
+
+//bag.json
+[
+  {
+    "name": "bag1",
+    "size": 10,
+    "contents": {
+      "pocket1": {
+        "brand": "brand_a"
+      },
+      "pocket2": {
+        "brand2": "brand_b"
+      },
+      "main": {}
+    }
+  },
+  {
+    "name": "bag2",
+    "size": 20,
+    "contents": {
+      "pocket1": {
+        "brand": "brand_c"
+      },
+      "pocket2": {
+        "brand2": "brand_d"
+      },
+      "main": {}
+    }
+  },
+  {
+    "name": "bag3",
+    "size": 30,
+    "contents": {
+      "pocket1": {
+        "brand": "brand_b"
+      },
+      "pocket2": {},
+      "main": {}
+    }
+  }
+]
+   ```
+
+Now lets get to the code : 
 
 ```javascript
 
@@ -134,11 +214,32 @@ const results = await tidbit
 // If you don't want to query an array instead of a set of files you can do it using `.fromArray()` instead of `.collection()`
 await tidbit.fromArray([{name:'john',age:20},{name:'bill',age:30}]).find({age:30}).toArray();
 
+//If you want to parse an array inside of a JSON you can use the `path` helper to point where the array is within a json file
+//response.json
+{
+  "version": 1.0,
+  "data": {
+    "results": [
+      {
+        "name": "john doe",
+        "departmentID": 1
+      }
+    ]
+  }
+}
+
+const results = await tidbit
+  .collection("users")
+  .path("data.results") // Inside of "data" and then inside of "results"
+  .find({})
+  .toArray();   
+
+
    ```
 
 ### Streams
 
-Streams are generally slower than in memory, but it uses less memory as it breaks in chunks for procession. For multiple big files, NodeJS will not crash.
+Streams are generally slower than in memory, but it uses less memory as it breaks in chunks for procession. For multiple big files, NodeJS will not crash. The API it's pretty much the same.
 
 ```javascript
 
@@ -184,7 +285,9 @@ await tidbit.fromStream(fs.createReadStream('./file.json')).find(query).toArray(
 
   ## ❗ Limitations
 
-  It is not as powerful as a proper database solution, it doesn't have indexes and for now, it is a readonly solution.
+  It is not as powerful nor fast as a proper database solution, it doesn't have indexes and, *for now*, it is a read-only solution. For now only json arrays are supported.
+
+  Keep in mind that the it could take a couple of seconds if you deal with huge files with a lot of complex of matching criteria. Memory tends to be faster, but Node has a limitation of how much it can handle. Streams will help there.
 
   I believe the best usage for the package is to filter and manipulate data from multiple files to a single file with the necessary information. CLI and ETL solutions might benefit from it too.
 
