@@ -11,7 +11,7 @@ One day I caught up myself with a a bunch of separated JSON files and I needed a
 To install it should not be hard and it supports Javascript and Typescript
 
 ```bash
-npm install tidbit
+npm install tidbit-js
    ```
    
 ## 🪄 Quickstart
@@ -25,7 +25,7 @@ In memory is generally faster than streams, but it also uses more memory too. Fo
 
 ```javascript
 
-import { Tidbit } from "../src/tidbit/";
+import { Tidbit } from "tidbit-js";
 
 //Instantiate the tidbit and map the 'collections' for it
 

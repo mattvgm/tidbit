@@ -1,5 +1,5 @@
 {
-  "name": "tidbit",
+  "name": "tidbit-js",
   "version": "1.0.0",
   "description": "A pseudo database like query package to easily query text files and treat their data",
   "main": "dist/index.js",
