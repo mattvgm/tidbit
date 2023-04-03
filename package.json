@@ -2,14 +2,14 @@
   "name": "tidbit-js",
   "version": "0.0.1",
   "description": "A pseudo NoSQL database like query package to easily query text files and treat their data",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
-  "files": [
-    "dist/"
-  ],
+  "main": "index.js",
+  "types": "index.d.ts",
   "scripts": {
     "test": "jest",
-    "build": "tsc"
+    "build": "tsc",
+    "pre-publish": "rm -rf dist && npm run build && cp package*.json README.MD LICENSE dist",
+    "publish": "npm publish ./dist",
+    "pack": "npm pack ./dist"
   },
   "keywords": [],
   "author": "Matheus Vargem",
