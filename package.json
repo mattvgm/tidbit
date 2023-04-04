@@ -1,6 +1,6 @@
 {
   "name": "tidbit-js",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A pseudo NoSQL database like query package to easily query text files and treat their data",
   "main": "index.js",
   "types": "index.d.ts",
