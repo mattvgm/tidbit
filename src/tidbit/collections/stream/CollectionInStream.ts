@@ -3,13 +3,20 @@ import { pipeline } from "node:stream/promises";
 import StreamArray, { streamArray } from "stream-json/streamers/StreamArray";
 import fs from "fs";
 import { pick } from "stream-json/filters/Pick";
-import { parser } from "stream-json/Parser";
-import { Collection, CollectionMetadata } from "../collection";
+import Parser from "stream-json/Parser";
+import {
+  Collection,
+  CollectionMetadata,
+  FileWithParser,
+  isFilesWithCustomParser,
+} from "../collection";
 import { findStream } from "./findStream";
 import { projectStream } from "./projectStream";
 import { JsonArrayWrapper } from "./JsonArrayWrapper";
-
+import { explodeArray } from "../utils/exploreArrayType";
 const StreamConcat = require("stream-concat");
+
+const Verifier = require("stream-json/utils/Verifier");
 
 export class CollectionInStream extends Collection {
   constructor(collection?: CollectionMetadata) {
@@ -47,15 +54,26 @@ export class CollectionInStream extends Collection {
   }
 
   public async exec(writableStream: Writable, wrapWithBrackets: boolean) {
+    let fileContent = undefined;
     let combinedStream = undefined;
+
+    const filesToParse = explodeArray(this.collection?.files);
     if (this.collection && this.collection.files) {
       let fileIndex = 0;
       const nextStreamAsync = () => {
         return new Promise((res) => {
-          if (fileIndex === this.collection!.files.length) {
+          if (fileIndex === filesToParse.length) {
             return res(null);
           }
-          return res(fs.createReadStream(this.collection!.files[fileIndex++]));
+          ///
+          const currentFile = filesToParse[fileIndex++];
+
+          //If no parser was provided assume the builtin one
+          if (!currentFile.parser) {
+            currentFile.parser = fs.createReadStream;
+          }
+
+          return res(currentFile.parser(currentFile.file));
         });
       };
       combinedStream = new StreamConcat(nextStreamAsync, {});
@@ -66,18 +84,34 @@ export class CollectionInStream extends Collection {
         "Please provide either a collection or a readable stream"
       );
     }
+    const findStreamInstance = findStream(
+      this.searchOptions.where,
+      this.searchOptions.pagination
+    );
+    const jsonArrayWrapper = new JsonArrayWrapper(wrapWithBrackets);
+
+    const parser = new Parser({
+      jsonStreaming: true,
+      objectMode: true,
+      autoDestroy: true,
+    });
+
+    const pickStep = pick({ filter: this.searchOptions.path ?? "" });
+    const streamArray = new StreamArray({});
+
+    const projStream = projectStream(
+      this.searchOptions.project,
+      this.searchOptions.relationOptions
+    );
 
     await pipeline(
       combinedStream,
-      parser({ jsonStreaming: true }),
-      pick({ filter: this.searchOptions.path ?? "" }),
-      new StreamArray({}),
-      findStream(this.searchOptions.where, this.searchOptions.pagination),
-      projectStream(
-        this.searchOptions.project,
-        this.searchOptions.relationOptions
-      ),
-      new JsonArrayWrapper(wrapWithBrackets),
+      parser,
+      pickStep,
+      streamArray,
+      findStreamInstance,
+      projStream,
+      jsonArrayWrapper,
       writableStream
     );
   }

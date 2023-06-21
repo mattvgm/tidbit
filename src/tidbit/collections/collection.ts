@@ -15,9 +15,27 @@ export type Pagination = {
   skip?: number | undefined;
 };
 
+export type ParserFunction = (file: string) => any;
+
+export type FilesWithCustomParser = {
+  files: string[];
+  parser: ParserFunction;
+};
+
+export type FileWithParser = {
+  file: string;
+  parser: ParserFunction;
+};
+
+export function isFilesWithCustomParser(
+  arg: any
+): arg is FilesWithCustomParser {
+  return arg.files !== undefined && arg.parser !== undefined;
+}
+
 export type CollectionMetadata = {
   name: string;
-  files: string[];
+  files: string[] | FilesWithCustomParser[]; // | object[] | Function[] |;
   loadInMemory: boolean;
 };
 
