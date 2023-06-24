@@ -35,7 +35,7 @@ export function isFilesWithCustomParser(
 
 export type CollectionMetadata = {
   name: string;
-  files: string[] | FilesWithCustomParser[]; // | object[] | Function[] |;
+  files: Array<string | FilesWithCustomParser>; // | object[] | Function[] |;
   loadInMemory: boolean;
 };
 

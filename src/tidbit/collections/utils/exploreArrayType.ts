@@ -21,7 +21,7 @@ import { FileWithParser, FilesWithCustomParser } from "../collection";
 //   { file: "./data/users3.csv", parser: (file) => csv(file) },
 // ];
 export function explodeArray(
-  files: string[] | FilesWithCustomParser[]
+  files: Array<string | FilesWithCustomParser>
 ): FileWithParser[] {
   return files.flatMap((eachFile: any) =>
     Array.isArray(eachFile?.files)
