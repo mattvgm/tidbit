@@ -1,4 +1,4 @@
-import { FileWithParser } from "../collection";
+import { FileWithParser, FilesWithCustomParser } from "../collection";
 // Explode files to a single array
 
 // this array
@@ -20,7 +20,9 @@ import { FileWithParser } from "../collection";
 //   { file: "./data/users1.csv", parser: (file) => csv(file) },
 //   { file: "./data/users3.csv", parser: (file) => csv(file) },
 // ];
-export function explodeArray(files: any): FileWithParser[] {
+export function explodeArray(
+  files: string[] | FilesWithCustomParser[]
+): FileWithParser[] {
   return files.flatMap((eachFile: any) =>
     Array.isArray(eachFile?.files)
       ? eachFile?.files.map((f: any) => ({

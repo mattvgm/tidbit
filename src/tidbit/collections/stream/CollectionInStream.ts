@@ -57,8 +57,8 @@ export class CollectionInStream extends Collection {
     let fileContent = undefined;
     let combinedStream = undefined;
 
-    const filesToParse = explodeArray(this.collection?.files);
     if (this.collection && this.collection.files) {
+      const filesToParse = explodeArray(this.collection?.files);
       let fileIndex = 0;
       const nextStreamAsync = () => {
         return new Promise((res) => {
@@ -84,6 +84,8 @@ export class CollectionInStream extends Collection {
         "Please provide either a collection or a readable stream"
       );
     }
+
+    //Streams
     const findStreamInstance = findStream(
       this.searchOptions.where,
       this.searchOptions.pagination
