@@ -4,6 +4,7 @@ import { Collection, CollectionMetadata } from "../collection";
 import path from "path";
 import { CollectionFactory } from "../utils/CollectionFactory";
 import { queryRelations } from "../../find/queryRelations";
+import { explodeArray } from "../utils/exploreArrayType";
 
 export class CollectionInMemory extends Collection {
   protected arrayData: any[] = [];
@@ -26,7 +27,8 @@ export class CollectionInMemory extends Collection {
 
   load() {
     if (this.collection) {
-      return concatJsonArray(this.collection.files, this.searchOptions.path);
+      const files = explodeArray(this.collection.files);
+      return concatJsonArray(files, this.searchOptions.path);
     } else if (this.arrayData.length >= 1) {
       return this.arrayData;
     } else {

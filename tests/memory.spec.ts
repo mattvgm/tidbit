@@ -2,6 +2,7 @@ import { beforeAll, describe, expect, test, it, jest } from "@jest/globals";
 import { Tidbit } from "../src/tidbit/";
 import { Writable } from "node:stream";
 import path from "node:path";
+import fs from "node:fs";
 import { gt, includes, lt, not } from "../src/tidbit/comparators";
 
 const mockedList = [
@@ -58,6 +59,21 @@ const departmentsInMemoryCollectionMetadata = {
   files: [path.resolve(__dirname, "mock", "relations", "departments.json")],
 };
 
+const simpleInMemoryCollectionMetadataWithCustomParser = {
+  name: "simpleWithCustomParser",
+  loadInMemory: true,
+  files: [
+    path.resolve(__dirname, "mock", "simple", "users3.json").toString(),
+    {
+      files: [
+        path.resolve(__dirname, "mock", "simple", "users.json"),
+        path.resolve(__dirname, "mock", "simple", "users2.json"),
+      ],
+      parser: (file: string) => JSON.parse(fs.readFileSync(file).toString()),
+    },
+  ],
+};
+
 describe("TidBit Memory", () => {
   let tidbit: Tidbit;
   beforeAll(() => {
@@ -69,6 +85,7 @@ describe("TidBit Memory", () => {
         departmentsInMemoryCollectionMetadata,
         responseInMemoryCollectionMetadata,
         complex2InMemoryCollectionMetadata,
+        simpleInMemoryCollectionMetadataWithCustomParser,
       ],
     });
   });
@@ -450,6 +467,26 @@ describe("TidBit Memory", () => {
       .collection("simple")
       .find(query)
       .skip(2)
+      .toArray();
+
+    //Assert
+    expect(results).toStrictEqual(expected);
+  });
+
+  it("should be able to filter by name 'john' with custom parser", async () => {
+    //Arrange
+    const query = { name: "john" };
+    const expected = [
+      { name: "john", surname: "tree", age: 30 },
+      { name: "john", surname: "doe", age: 12 },
+      { name: "john", surname: "clark", age: 21 },
+      { name: "john", surname: "junior", age: 40 },
+      { name: "john", surname: "zack", age: 35 },
+    ];
+    //Act
+    const results = await tidbit
+      .collection("simpleWithCustomParser")
+      .find(query)
       .toArray();
 
     //Assert

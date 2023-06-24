@@ -1,7 +1,7 @@
 {
   "name": "tidbit-js",
   "version": "0.0.2",
-  "description": "A pseudo NoSQL database like query package to easily query text files and treat their data",
+  "description": "A NoSQL-db-like query package to easily query text files and treat their data",
   "main": "index.js",
   "types": "index.d.ts",
   "scripts": {
@@ -11,7 +11,14 @@
     "publish": "npm publish ./dist",
     "pack": "npm pack ./dist"
   },
-  "keywords": [],
+  "keywords": [
+    "query",
+    "json"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mattvgm/tidbit.git"
+  },
   "author": "Matheus Vargem",
   "license": "MIT",
   "devDependencies": {
