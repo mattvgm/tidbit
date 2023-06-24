@@ -53,6 +53,21 @@ const responseInMemoryCollectionMetadata = {
   files: [path.resolve(__dirname, "mock", "recursive", "response.json")],
 };
 
+const simpleInMemoryCollectionMetadataWithCustomParser = {
+  name: "simpleWithCustomParser",
+  loadInMemory: false,
+  files: [
+    path.resolve(__dirname, "mock", "simple", "users3.json"),
+    {
+      files: [
+        path.resolve(__dirname, "mock", "simple", "users.json"),
+        path.resolve(__dirname, "mock", "simple", "users2.json"),
+      ],
+      parser: (file: string) => fs.createReadStream(file),
+    },
+  ],
+};
+
 describe("TidBit Streams - toArray", () => {
   let tidbit: Tidbit;
   beforeAll(() => {
@@ -63,6 +78,7 @@ describe("TidBit Streams - toArray", () => {
         relationsEmployeesInMemoryCollectionMetadata,
         departmentsInMemoryCollectionMetadata,
         responseInMemoryCollectionMetadata,
+        simpleInMemoryCollectionMetadataWithCustomParser,
       ],
     });
   });
@@ -300,6 +316,27 @@ describe("TidBit Streams - toArray", () => {
       .find(query)
       .toArray();
 
+    //Assert
+    expect(results).toStrictEqual(expected);
+  });
+
+  it("should be able to filter by name 'john' with custom parser", async () => {
+    //Arrange
+    const query = { name: "john" };
+    const expected = [
+      { name: "john", surname: "tree", age: 30 },
+      { name: "john", surname: "doe", age: 12 },
+      { name: "john", surname: "clark", age: 21 },
+      { name: "john", surname: "junior", age: 40 },
+      { name: "john", surname: "zack", age: 35 },
+    ];
+    //Act
+    const results = await tidbit
+      .collection("simpleWithCustomParser")
+      .find(query)
+      .toArray();
+
+    console.log(results);
     //Assert
     expect(results).toStrictEqual(expected);
   });
@@ -567,7 +604,6 @@ describe("TidBit Streams - toWritableStream", () => {
       },
     ];
     //Act
-    //TODO: SEARCH WHY IS THIS HAPPENING
     const read = fs.createReadStream(
       path.resolve(__dirname, "mock", "simple", "users.json"),
       { encoding: "utf8" }
