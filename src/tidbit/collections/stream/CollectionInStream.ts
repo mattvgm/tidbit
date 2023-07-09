@@ -10,7 +10,7 @@ import {
   FileWithParser,
   isFilesWithCustomParser,
 } from "../collection";
-import { findStream } from "./findStream";
+import { FindStream } from "./findStream";
 import { projectStream } from "./projectStream";
 import { JsonArrayWrapper } from "./JsonArrayWrapper";
 import { explodeArray } from "../utils/exploreArrayType";
@@ -55,7 +55,7 @@ export class CollectionInStream extends Collection {
 
   public async exec(writableStream: Writable, wrapWithBrackets: boolean) {
     let fileContent = undefined;
-    let combinedStream = undefined;
+    let combinedStream: Readable;
 
     if (this.collection && this.collection.files) {
       const filesToParse = explodeArray(this.collection?.files);
@@ -86,7 +86,7 @@ export class CollectionInStream extends Collection {
     }
 
     //Streams
-    const findStreamInstance = findStream(
+    const findStreamInstance = new FindStream(
       this.searchOptions.where,
       this.searchOptions.pagination
     );
@@ -106,6 +106,15 @@ export class CollectionInStream extends Collection {
       this.searchOptions.relationOptions
     );
 
+    // Stop reading from the first stream when the flag is set
+    combinedStream.on("data", (chunk: any) => {
+      if (findStreamInstance.stopReading) {
+        combinedStream.destroy();
+        jsonArrayWrapper.end();
+        writableStream.end();
+      }
+    });
+
     await pipeline(
       combinedStream,
       parser,
@@ -115,6 +124,14 @@ export class CollectionInStream extends Collection {
       projStream,
       jsonArrayWrapper,
       writableStream
-    );
+    ).catch((e) => {
+      //If we destroyed the read manually because of the flag 'stopReading' then we can skip this error
+      if (
+        findStreamInstance.stopReading === true &&
+        e.code !== "ERR_STREAM_PREMATURE_CLOSE"
+      ) {
+        throw e;
+      }
+    });
   }
 }
