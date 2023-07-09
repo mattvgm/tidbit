@@ -125,8 +125,9 @@ export class CollectionInStream extends Collection {
       jsonArrayWrapper,
       writableStream
     ).catch((e) => {
+      //If we destroyed the read manually because of the flag 'stopReading' then we can skip this error
       if (
-        findStreamInstance.stopReading === false &&
+        findStreamInstance.stopReading === true &&
         e.code !== "ERR_STREAM_PREMATURE_CLOSE"
       ) {
         throw e;
