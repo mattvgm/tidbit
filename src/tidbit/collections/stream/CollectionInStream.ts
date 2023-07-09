@@ -10,8 +10,8 @@ import {
   FileWithParser,
   isFilesWithCustomParser,
 } from "../collection";
-import { FindStream } from "./findStream";
-import { projectStream } from "./projectStream";
+import { FindStream } from "./FindStream";
+import { ProjectStream } from "./ProjectStream";
 import { JsonArrayWrapper } from "./JsonArrayWrapper";
 import { explodeArray } from "../utils/exploreArrayType";
 const StreamConcat = require("stream-concat");
@@ -101,7 +101,7 @@ export class CollectionInStream extends Collection {
     const pickStep = pick({ filter: this.searchOptions.path ?? "" });
     const streamArray = new StreamArray({});
 
-    const projStream = projectStream(
+    const projStream = new ProjectStream(
       this.searchOptions.project,
       this.searchOptions.relationOptions
     );

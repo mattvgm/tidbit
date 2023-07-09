@@ -1,6 +1,6 @@
 import { Writable, Readable } from "node:stream";
 
-import { ProjectFunction } from "./stream/projectStream";
+import { ProjectFunction } from "./stream/ProjectStream";
 
 export type SearchOptions = {
   where?: object | undefined;
