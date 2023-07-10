@@ -39,10 +39,13 @@ export type CollectionMetadata = {
   loadInMemory: boolean;
 };
 
+export type MutateFunction = (sourceFieldValue: any) => any;
+
 export type RelationOptions = {
   collection: CollectionMetadata;
   sourceField: string;
   foreignField: string;
+  mutateSourceValue?: MutateFunction;
 };
 export interface Collection {
   /**

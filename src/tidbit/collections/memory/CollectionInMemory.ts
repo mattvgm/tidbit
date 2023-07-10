@@ -74,7 +74,13 @@ export class CollectionInMemory extends Collection {
       results = await Promise.all(
         results.map(async (result: any) => {
           if (this.searchOptions.relationOptions) {
+            const colMeta = this.searchOptions.relationOptions.collection;
+            const relationCollection = CollectionFactory(
+              colMeta,
+              colMeta.loadInMemory
+            );
             const relationResult = await queryRelations(
+              relationCollection,
               result[this.searchOptions.relationOptions.sourceField],
               this.searchOptions.relationOptions
             );
