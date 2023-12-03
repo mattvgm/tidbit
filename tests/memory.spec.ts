@@ -107,6 +107,24 @@ describe("TidBit Memory", () => {
     expect(results).toStrictEqual(expected);
   });
 
+  it("should be able to filter by name 'john' and surname 'doe' in different ways", async () => {
+    //Arrange
+    const query = { name: "john", surname: "doe" };
+    const queryWithAnds = { AND: [{ name: "john" }, { surname: "doe" }] };
+    //Act
+    const resultsWithoutANDS = await tidbit
+      .collection("simple")
+      .find(query)
+      .toArray();
+    const resultsWithANDS = await tidbit
+      .collection("simple")
+      .find(queryWithAnds)
+      .toArray();
+
+    //Assert
+    expect(resultsWithoutANDS).toStrictEqual(resultsWithANDS);
+  });
+
   it("should not be able to filter by name 'rufus'", async () => {
     //Arrange
     const query = { name: "rufus" };

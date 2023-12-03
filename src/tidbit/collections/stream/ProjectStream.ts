@@ -2,6 +2,7 @@ import { Transform } from "node:stream";
 import { queryRelations } from "../../find/queryRelations";
 import { RelationOptions } from "../collection";
 import { TransformCallback } from "stream";
+import { CollectionFactory } from "../utils/CollectionFactory";
 export type ProjectFunction = (result: object, relation?: object) => object;
 
 export class ProjectStream extends Transform {
@@ -22,7 +23,13 @@ export class ProjectStream extends Transform {
     let result;
     if (typeof this.projectFunction === "function") {
       if (this.relationOptions) {
+        const colMeta = this.relationOptions.collection;
+        const relationCollection = CollectionFactory(
+          { ...colMeta, loadInMemory: true },
+          true // Currently the relations metadata only supports in memory loading
+        );
         const relationResult = await queryRelations(
+          relationCollection,
           json[this.relationOptions.sourceField],
           this.relationOptions
         );

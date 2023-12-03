@@ -336,7 +336,6 @@ describe("TidBit Streams - toArray", () => {
       .find(query)
       .toArray();
 
-    console.log(results);
     //Assert
     expect(results).toStrictEqual(expected);
   });
