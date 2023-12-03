@@ -1,5 +1,4 @@
 import { Collection, RelationOptions } from "../collections/collection";
-import { CollectionFactory } from "../collections/utils/CollectionFactory";
 
 export async function queryRelations(
   relationCollection: Collection,

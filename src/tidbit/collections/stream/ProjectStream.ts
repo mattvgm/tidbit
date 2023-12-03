@@ -25,8 +25,8 @@ export class ProjectStream extends Transform {
       if (this.relationOptions) {
         const colMeta = this.relationOptions.collection;
         const relationCollection = CollectionFactory(
-          colMeta,
-          colMeta.loadInMemory
+          { ...colMeta, loadInMemory: true },
+          true // Currently the relations metadata only supports in memory loading
         );
         const relationResult = await queryRelations(
           relationCollection,

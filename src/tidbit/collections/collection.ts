@@ -42,7 +42,7 @@ export type CollectionMetadata = {
 export type MutateFunction = (sourceFieldValue: any) => any;
 
 export type RelationOptions = {
-  collection: CollectionMetadata;
+  collection: Omit<CollectionMetadata, "loadInMemory">;
   sourceField: string;
   foreignField: string;
   mutateSourceValue?: MutateFunction;
